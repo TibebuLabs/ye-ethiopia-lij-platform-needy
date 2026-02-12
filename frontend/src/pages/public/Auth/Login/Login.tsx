@@ -1,262 +1,388 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { motion, type Variants } from 'framer-motion';
 import { 
-  ShieldCheckIcon, 
-  EnvelopeIcon, 
-  LockClosedIcon,
-  ArrowPathIcon 
-} from '@heroicons/react/24/outline';
+  Mail, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  LogIn, 
+   
+  Shield, 
+  Globe,
+  ChevronRight,
+  ChevronDown
+} from 'lucide-react';
 
-interface LocationState {
-  from?: string;
-  message?: string;
+interface FormData {
+  email: string;
+  password: string;
+  rememberMe: boolean;
 }
 
-const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { signIn } = useAuth();
-  
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const [formData, setFormData] = useState({
+type Language = 'en' | 'am' | 'om' | 'ti';
+
+const LoginPage: React.FC = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [language, setLanguage] = useState<Language>('en');
+  const [isLanguageOpen, setIsLanguageOpen] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
-    rememberMe: false,
+    rememberMe: false
   });
 
-  const state = location.state as LocationState;
-  const from = state?.from || '/dashboard';
-  const message = state?.message;
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    console.log('Login attempt:', formData);
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === 'checkbox' ? checked : value
     }));
-    // Clear error when user types
-    if (error) setError('');
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+  const handleLanguageSelect = (lang: Language): void => {
+    setLanguage(lang);
+    setIsLanguageOpen(false);
+  };
 
-    try {
-      await signIn(formData.email, formData.password);
-      
-      // Store remember me preference
-      if (formData.rememberMe) {
-        localStorage.setItem('remember_me', 'true');
+  const languageOptions = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'am', label: 'አማርኛ', flag: '🇪🇹' },
+    { code: 'om', label: 'Oromiffa', flag: '🇪🇹' },
+    { code: 'ti', label: 'ትግርኛ', flag: '🇪🇹' }
+  ];
+
+  const getCurrentLanguage = () => {
+    return languageOptions.find(lang => lang.code === language) || languageOptions[0];
+  };
+
+  // Animation variants
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
       }
-      
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError('Invalid email or password. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#9C2B2B]/10 via-white to-[#FCDD09]/10 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#9C2B2B]/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#078930]/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#FCDD09]/5 rounded-full blur-3xl" />
-      </div>
+  const itemVariants: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100
+      }
+    }
+  };
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-xl p-10 rounded-2xl shadow-2xl relative z-10"
+  const footerLinks: string[] = ['Privacy Policy', 'Terms of Service', 'Help Center'];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+      
+      <motion.div 
+        className="w-full max-w-md relative z-10"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
       >
-        {/* Header */}
-        <div className="text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="mx-auto h-20 w-20 bg-gradient-to-br from-[#9C2B2B] to-[#7A1F1F] rounded-2xl flex items-center justify-center mb-4 shadow-lg"
+        {/* Language Dropdown */}
+        <motion.div 
+          className="flex justify-end mb-6 relative"
+          variants={itemVariants}
+        >
+          <div className="relative">
+            <button
+              onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+              className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm 
+                       border border-gray-200 rounded-xl shadow-sm hover:shadow-md 
+                       transition-all duration-300 text-sm font-medium text-gray-700
+                       hover:border-emerald-300 focus:outline-none focus:ring-2 
+                       focus:ring-emerald-500/20"
+              type="button"
+            >
+              <Globe size={16} className="text-emerald-600" />
+              <span>{getCurrentLanguage().flag}</span>
+              <span>{getCurrentLanguage().label}</span>
+              <ChevronDown size={16} className={`transition-transform duration-300 ${isLanguageOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {/* Dropdown Menu */}
+            {isLanguageOpen && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl 
+                         border border-gray-100 overflow-hidden z-50"
+              >
+                {languageOptions.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => handleLanguageSelect(lang.code as Language)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm 
+                             transition-all duration-200 hover:bg-emerald-50
+                             ${language === lang.code ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-700'}`}
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    <span>{lang.label}</span>
+                    {language === lang.code && (
+                      <span className="ml-auto text-emerald-600">✓</span>
+                    )}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Main Card */}
+        <motion.div 
+          className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden 
+                   border border-gray-100/50 relative"
+          variants={itemVariants}
+        >
+          {/* Modern gradient accent */}
+          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600"></div>
+          
+          <div className="p-6 sm:p-8">
+            {/* Logo Section with Lock Image */}
+            <motion.div 
+              className="text-center mb-8"
+              variants={itemVariants}
+            >
+              <div className="relative inline-block mb-4">
+                {/* Lock Image Container */}
+                <div className="relative group">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto relative">
+                    {/* Outer glow */}
+                    <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl group-hover:bg-emerald-500/30 transition-all duration-500"></div>
+                    
+                    {/* Main icon container */}
+                    <div className="relative w-full h-full bg-gradient-to-br from-emerald-500 to-emerald-600 
+                                  rounded-2xl rotate-12 shadow-xl flex items-center justify-center
+                                  group-hover:rotate-45 group-hover:scale-105 transition-all duration-500">
+                      <div className="-rotate-12 group-hover:-rotate-45 transition-all duration-500">
+                        <Lock className="text-white" size={48} strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    
+                    {/* Decorative elements */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-amber-400 rounded-full 
+                                  flex items-center justify-center text-white font-bold shadow-lg
+                                  border-2 border-white animate-pulse">
+                      <Shield size={16} />
+                    </div>
+                    
+                    {/* Security badge */}
+                    <div className="absolute -bottom-2 -left-2 bg-white rounded-full px-3 py-1 
+                                  shadow-lg border border-gray-100 flex items-center gap-1">
+                      <span className="text-xs font-semibold text-emerald-700">Secured</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 
+                           bg-clip-text text-transparent mb-2">
+                Welcome Back
+              </h1>
+              <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
+                <Shield size={14} className="text-emerald-500" />
+                Ye Ethiopia Lij - Child Welfare Platform
+              </p>
+            </motion.div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+              <motion.div variants={itemVariants}>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
+                  </div>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl 
+                             bg-gray-50/50 focus:bg-white
+                             focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 
+                             transition-all duration-200 outline-none text-gray-700
+                             placeholder:text-gray-400 hover:border-gray-300"
+                    placeholder="name@example.com"
+                    aria-label="Email address"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <a 
+                    href="#" 
+                    className="text-xs font-medium text-emerald-600 hover:text-emerald-700 
+                             transition-colors hover:underline"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    Forgot?
+                  </a>
+                </div>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="text-gray-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
+                  </div>
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="block w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl 
+                             bg-gray-50/50 focus:bg-white
+                             focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 
+                             transition-all duration-200 outline-none text-gray-700
+                             placeholder:text-gray-400 hover:border-gray-300"
+                    placeholder="••••••••"
+                    aria-label="Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center 
+                             text-gray-400 hover:text-emerald-600 transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                className="flex items-center justify-between"
+                variants={itemVariants}
+              >
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="rememberMe"
+                    checked={formData.rememberMe}
+                    onChange={handleChange}
+                    className="w-4 h-4 text-emerald-600 border-gray-300 rounded 
+                             focus:ring-emerald-500 focus:ring-offset-0
+                             cursor-pointer transition-all duration-200
+                             group-hover:border-emerald-400"
+                    aria-label="Remember me"
+                  />
+                  <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
+                    Keep me signed in
+                  </span>
+                </label>
+              </motion.div>
+
+              <motion.button
+                type="submit"
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 
+                         hover:from-emerald-700 hover:to-emerald-600
+                         text-white font-semibold py-3.5 px-4 rounded-xl
+                         shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/50
+                         transition-all duration-300 flex items-center justify-center gap-2
+                         group"
+              >
+                <span>Sign In</span>
+                <LogIn size={18} className="group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+
+              {/* Sign Up Link */}
+              <motion.div 
+                className="pt-4 text-center"
+                variants={itemVariants}
+              >
+                <p className="text-sm text-gray-600">
+                  New to Ye Ethiopia Lij?{' '}
+                  <a 
+                    href="#" 
+                    className="font-semibold text-emerald-600 hover:text-emerald-700 
+                             inline-flex items-center gap-1 group transition-all"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    Create account
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </p>
+              </motion.div>
+            </form>
+          </div>
+        </motion.div>
+
+        {/* Footer Links */}
+        <motion.div 
+          className="mt-8 text-center"
+          variants={itemVariants}
+        >
+          <div className="flex items-center justify-center flex-wrap gap-4 sm:gap-6">
+            {footerLinks.map((item, index) => (
+              <a 
+                key={index}
+                href="#" 
+                className="text-xs text-gray-500 hover:text-emerald-600 
+                         transition-colors relative group"
+                onClick={(e) => e.preventDefault()}
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 
+                               group-hover:w-full transition-all duration-300"></span>
+              </a>
+            ))}
+          </div>
+          
+          {/* Official Seal */}
+          <motion.div 
+            className="flex justify-center items-center mt-6"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
-            <ShieldCheckIcon className="h-12 w-12 text-white" />
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm 
+                          rounded-full shadow-sm border border-gray-100">
+              <div className="relative">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-amber-500 
+                              rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">🇪🇹</span>
+                </div>
+              </div>
+              <span className="text-xs font-medium text-gray-600">Official Partner</span>
+            </div>
           </motion.div>
           
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
-            Welcome Back
-          </h2>
-          <p className="text-sm text-gray-600">
-            Sign in to your account to continue your journey of hope
+          <p className="text-xs text-gray-400 mt-4">
+            © {new Date().getFullYear()} Ye Ethiopia Lij. All rights reserved.
           </p>
-        </div>
-
-        {/* Success Message */}
-        {message && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-green-50 border-l-4 border-green-500 p-4 rounded"
-          >
-            <p className="text-sm text-green-700">{message}</p>
-          </motion.div>
-        )}
-
-        {/* Error Alert */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-red-50 border-l-4 border-red-500 p-4 rounded"
-          >
-            <p className="text-sm text-red-700">{error}</p>
-          </motion.div>
-        )}
-
-        {/* Login Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9C2B2B] focus:border-transparent focus:z-10 sm:text-sm transition duration-200"
-                  placeholder="you@example.com"
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <LockClosedIcon className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none relative block w-full px-3 py-3 pl-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9C2B2B] focus:border-transparent focus:z-10 sm:text-sm transition duration-200"
-                  placeholder="••••••••"
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="rememberMe"
-                  name="rememberMe"
-                  type="checkbox"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                  className="h-4 w-4 text-[#9C2B2B] focus:ring-[#9C2B2B] border-gray-300 rounded transition duration-200"
-                  disabled={isLoading}
-                />
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <Link 
-                  to="/forgot-password" 
-                  className="font-medium text-[#9C2B2B] hover:text-[#7A1F1F] transition duration-200"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-[#9C2B2B] to-[#7A1F1F] hover:from-[#7A1F1F] hover:to-[#611919] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#9C2B2B] transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-            >
-              {isLoading ? (
-                <span className="flex items-center">
-                  <ArrowPathIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                  Signing in...
-                </span>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </div>
-
-          {/* Register Link */}
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link 
-                to="/register" 
-                className="font-medium text-[#9C2B2B] hover:text-[#7A1F1F] transition duration-200"
-              >
-                Register here
-              </Link>
-            </p>
-          </div>
-
-          {/* Role Info */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Registered users only</span>
-              </div>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2 justify-center">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#9C2B2B]/10 text-[#9C2B2B]">
-                Admin
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#078930]/10 text-[#078930]">
-                Organization
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FCDD09]/10 text-[#856d00]">
-                Sponsor
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#DA121A]/10 text-[#DA121A]">
-                School
-              </span>
-            </div>
-          </div>
-        </form>
+        </motion.div>
       </motion.div>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
