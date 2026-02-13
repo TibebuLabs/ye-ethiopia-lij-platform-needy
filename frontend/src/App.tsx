@@ -1,19 +1,8 @@
 
-import LoginPage from "./pages/public/Auth/Login/Login"
-import RegisterPage from "./pages/public/Auth/Register/Register"
-import HomePage from "./pages/public/Home/Home"
-import SponsorDashboard from "./sponsor/Dashboard/SponsorDashboard"
-
+import { AppRouter } from "./routes";
 
 function App() {
-  return (
-    <>
-    <HomePage />
-    <LoginPage />
- <RegisterPage />
- <SponsorDashboard/>
-    </>
-  )
+  return <AppRouter />;
 }
 
-export default App
+export default App;
