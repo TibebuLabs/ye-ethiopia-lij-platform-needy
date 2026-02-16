@@ -1,0 +1,7 @@
+/*
+
+- sendNotification()
+│   - getNotifications()
+│   - markAsRead()
+│   - deleteNotification()
+*/

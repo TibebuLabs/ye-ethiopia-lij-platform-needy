@@ -26,4 +26,3 @@ A web-based platform for integrated support and sponsorship tracking of orphaned
 5. Build for production: `npm run build`
 
 ## Project Structure
-(See above for detailed structure)

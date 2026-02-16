@@ -1,4 +1,4 @@
-// ==================== routes/index.tsx ====================
+import React from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import HomePage from "../pages/public/Home/Home";
 import LoginPage from "../pages/public/Auth/Login/Login";
@@ -28,6 +28,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-export const AppRouter = () => {
+export const AppRouter: React.FC = () => {
   return <RouterProvider router={router} />;
 };

@@ -1,0 +1,6 @@
+/*
+ enrollChild()
+│   - updateAcademicStatus()
+│   - generateAcademicReport()
+│   - getEnrolledChildren()
+*/
