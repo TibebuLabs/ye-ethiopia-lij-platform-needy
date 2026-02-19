@@ -4,6 +4,7 @@ import SponsorRoutes from './routes/SponsorRoutes';
 import LoginPage from './pages/public/Auth/Login/Login';
 import RegisterPage from './pages/public/Auth/Register/Register';
 import HomePage from './pages/public/Home/Home';
+import AdminRoutes from './routes/AdminRoutes';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         
         {/* Protected Sponsor Routes */}
         <Route path="/sponsor/*" element={<SponsorRoutes />} />
+         <Route path="/admin/*" element={<AdminRoutes />} />
         
         {/* Redirect root to login (or you can keep it as sponsor dashboard) */}
         <Route path="/" element={<Navigate to="/login" replace />} />
