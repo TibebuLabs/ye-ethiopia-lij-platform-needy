@@ -6,6 +6,7 @@ import RegisterPage from './pages/public/Auth/Register/Register';
 import HomePage from './pages/public/Home/Home';
 import AdminRoutes from './routes/AdminRoutes';
 import PMRoutes from './routes/PMRoutes';
+import SchoolRoutes from './routes/SchoolRoutes';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/sponsor/*" element={<SponsorRoutes />} />
          <Route path="/admin/*" element={<AdminRoutes />} />
          <Route path="/pm/*" element={<PMRoutes />} />
+         <Route path="/school/*" element={<SchoolRoutes />} />
         
         {/* Redirect root to login (or you can keep it as sponsor dashboard) */}
         <Route path="/" element={<Navigate to="/login" replace />} />
