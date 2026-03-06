@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dashboard as DashboardIcon,
   PersonAdd as PersonAddIcon,
@@ -26,8 +26,17 @@ import {
   Upload as UploadIcon,
   ArrowBack as ArrowBackIcon,
   History as HistoryIcon,
-  Assignment as AssignmentIcon
+  Assignment as AssignmentIcon,
+  Timeline as TimelineIcon,
+  Public as PublicIcon,
+  Info as InfoIcon
 } from '@mui/icons-material';
+import ChildSubmissions from './SubmitChildProfile';
+import SubmissionStatusPage from './SubmissionStatusPage';
+import InterventionLogs from './InterventionLogs';
+
+// ============== Import Child Components ==============
+
 
 // ============== Types and Interfaces ==============
 
@@ -73,6 +82,7 @@ interface User {
   role: string;
   avatar: string;
 }
+
 
 // ============== User Menu Component ==============
 
@@ -277,10 +287,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: DashboardIcon },
     { id: 'submit', label: 'Submit Child Profile', icon: PersonAddIcon },
-    { id: 'track', label: 'Track Status', icon: TrackChangesIcon },
+    { id: 'submissions', label: 'Submission Status', icon: TrackChangesIcon },
     { id: 'intervention', label: 'Intervention Log', icon: NoteAltIcon },
     { id: 'children', label: 'Children List', icon: ChildCareIcon }
-    // Reports item removed as requested
   ];
 
   return (
@@ -532,14 +541,14 @@ const RecentSubmission: React.FC<RecentSubmissionProps> = ({ submission }) => {
   );
 };
 
-// ============== Main Dashboard Component ==============
+// ============== Dashboard Home Page ==============
 
-const InstitutionDashboard: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [activePage, setActivePage] = useState('dashboard');
+interface DashboardHomeProps {
+  onNavigate: (page: string) => void;
+}
+
+const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
   const [selectedMonth, setSelectedMonth] = useState('6');
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
 
@@ -626,6 +635,305 @@ const InstitutionDashboard: React.FC = () => {
     }
   ];
 
+  // Quick actions data
+  const quickActions = [
+    { id: 1, label: 'New Child Profile', icon: PersonAddIcon, page: 'submit' },
+    { id: 2, label: 'View Submissions', icon: TrackChangesIcon, page: 'submissions' },
+    { id: 3, label: 'Contact Regional Admin', icon: ContactSupportIcon, page: 'contact' }
+  ];
+
+  // Activities data
+  const activities = [
+    {
+      id: 1,
+      icon: <MedicalServicesIcon />,
+      title: 'Health checkup completed',
+      childName: 'Abebe Kebede',
+      timestamp: 'Today, 10:30 AM',
+      description: 'Routine quarterly checkup. Results within normal ranges.',
+      type: 'health'
+    },
+    {
+      id: 2,
+      icon: <CheckCircleIcon />,
+      title: 'Submission approved',
+      childName: 'Tigist Alemu',
+      timestamp: '2 days ago',
+      description: 'Child profile has been approved and is now visible to sponsors.',
+      type: 'submission'
+    }
+  ];
+
+  // Chart data
+  const chartData = [
+    { month: 'May', value: 40 },
+    { month: 'Jun', value: 65 },
+    { month: 'Jul', value: 55 },
+    { month: 'Aug', value: 85 },
+    { month: 'Sep', value: 95 },
+    { month: 'Oct', value: 60 }
+  ];
+
+  const getActivityColor = (type: string) => {
+    switch(type) {
+      case 'health': return 'text-blue-500 bg-blue-50';
+      case 'education': return 'text-purple-500 bg-purple-50';
+      case 'submission': return 'text-orange-500 bg-orange-50';
+      default: return 'text-slate-500 bg-slate-50';
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Animated Welcome Banner */}
+      <div className={`
+        relative bg-gradient-to-r from-[#2E8B57] to-[#3CB371] rounded-2xl p-8 text-white overflow-hidden shadow-xl
+        transition-all duration-500 transform hover:scale-[1.02] cursor-pointer
+        ${showWelcome ? 'opacity-100' : 'opacity-90'}
+      `}
+      onClick={() => setShowWelcome(!showWelcome)}
+      >
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-white rounded-full animate-pulse" />
+          <div className="absolute -right-20 -bottom-20 w-60 h-60 bg-white rounded-full animate-pulse delay-1000" />
+        </div>
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-sm font-semibold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">
+              Welcome Back
+            </span>
+          </div>
+          <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
+            St. Gabriel Center 👋
+          </h2>
+          <p className="text-white/90 leading-relaxed max-w-2xl text-lg">
+            You're making a difference in the lives of 128 children. Track your impact, 
+            manage submissions, and monitor interventions all in one place.
+          </p>
+        </div>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <div
+            key={stat.id}
+            className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl 
+                     transition-all duration-500 transform hover:-translate-y-2 cursor-pointer
+                     border border-slate-100 overflow-hidden"
+            onMouseEnter={() => setHoveredStat(index)}
+            onMouseLeave={() => setHoveredStat(null)}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2E8B57] to-[#3CB371] opacity-0 
+                          group-hover:opacity-5 transition-opacity duration-500" />
+            
+            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-slate-100 rounded-full 
+                          group-hover:scale-150 transition-transform duration-700" />
+            
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <stat.icon className={`
+                  text-3xl transition-all duration-500
+                  ${hoveredStat === index ? 'scale-110 rotate-12' : ''}
+                  text-[#2E8B57]
+                `} />
+                {stat.trend && (
+                  <span className={`
+                    text-xs font-bold px-2 py-1 rounded-full transition-all duration-500
+                    ${hoveredStat === index ? 'bg-[#2E8B57] text-white' : 'bg-green-100 text-green-700'}
+                  `}>
+                    {stat.trend}
+                  </span>
+                )}
+              </div>
+              
+              <p className="text-3xl font-bold mb-1">{stat.value}</p>
+              <p className="text-sm text-slate-500">{stat.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-12 gap-8">
+        {/* Left Column */}
+        <div className="col-span-12 lg:col-span-8 space-y-8">
+          {/* Action Required */}
+          <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all duration-500">
+            <div className="p-6 border-b border-slate-200 flex justify-between items-center">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <WarningIcon className="text-amber-500" />
+                Action Required
+              </h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase animate-pulse">
+                3 Needs Correction
+              </span>
+            </div>
+            <div className="divide-y divide-slate-200">
+              {actionItems.map(item => (
+                <ActionItem key={item.id} item={item} />
+              ))}
+            </div>
+          </section>
+
+          {/* Activity Timeline */}
+          <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
+            <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
+            <div className="space-y-6">
+              {activities.map((activity, index) => (
+                <div key={activity.id} className="flex gap-4 group">
+                  <div className="relative">
+                    <div className={`
+                      w-12 h-12 rounded-2xl flex items-center justify-center
+                      transition-all duration-300 group-hover:scale-110 group-hover:rotate-6
+                      ${getActivityColor(activity.type)}
+                    `}>
+                      {activity.icon}
+                    </div>
+                    {index < activities.length - 1 && (
+                      <div className="absolute top-12 bottom-[-24px] left-1/2 -translate-x-1/2 
+                                    w-0.5 bg-gradient-to-b from-[#2E8B57]/20 to-transparent" />
+                    )}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <p className="font-bold group-hover:text-[#2E8B57] transition-colors">
+                      {activity.title}
+                    </p>
+                    <p className="text-xs text-slate-500 mb-2 flex items-center gap-2">
+                      <span className="font-medium">{activity.childName}</span>
+                      <span>•</span>
+                      <span>{activity.timestamp}</span>
+                    </p>
+                    <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 
+                              p-3 rounded-xl group-hover:bg-slate-100 transition-colors">
+                      {activity.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Chart Section */}
+          <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
+            <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+              <h3 className="text-lg font-bold">Support Impact Tracking</h3>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="text-sm border-slate-200 rounded-lg focus:ring-[#2E8B57] focus:border-[#2E8B57] px-3 py-2 bg-slate-50"
+              >
+                <option value="6">Last 6 Months</option>
+                <option value="12">Last 12 Months</option>
+              </select>
+            </div>
+
+            <div className="h-64 flex items-end gap-4 px-2">
+              {chartData.map((data, index) => {
+                const opacity = ['20', '40', '60', '80', '', '30'][index];
+                const bgColor = opacity ? `bg-[#2E8B57]/${opacity}` : 'bg-[#2E8B57]';
+                
+                return (
+                  <div key={data.month} className="flex-1 flex flex-col items-center gap-2 group">
+                    <div 
+                      className={`w-full ${bgColor} group-hover:opacity-80 rounded-t transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-[#2E8B57]/20`}
+                      style={{ height: `${data.value}%` }}
+                    />
+                    <span className="text-xs font-medium text-slate-400">{data.month}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#2E8B57]"></span>
+                <span className="text-slate-500">Nutritional Support</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#2E8B57]/30"></span>
+                <span className="text-slate-500">Health Interventions</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Right Column */}
+        <div className="col-span-12 lg:col-span-4 space-y-8">
+          {/* Quick Actions */}
+          <section className="bg-[#2E8B57]/5 p-6 rounded-2xl border border-[#2E8B57]/20 hover:shadow-xl transition-all duration-500">
+            <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+              {quickActions.map(action => (
+                <button
+                  key={action.id}
+                  onClick={() => onNavigate(action.page)}
+                  className="w-full flex items-center justify-start gap-3 p-4 bg-white rounded-lg 
+                           border border-slate-200 hover:border-[#2E8B57] transition-all 
+                           group hover:scale-[1.02] active:scale-95"
+                >
+                  <action.icon className="text-[#2E8B57] group-hover:scale-110 
+                                        transition-transform duration-300" />
+                  <span className="font-medium text-sm">{action.label}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Recent Submissions */}
+          <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
+            <h3 className="text-lg font-bold mb-4">Recent Submissions</h3>
+            <div className="space-y-4">
+              {recentSubmissions.map(submission => (
+                <RecentSubmission key={submission.id} submission={submission} />
+              ))}
+            </div>
+            <button 
+              onClick={() => onNavigate('submissions')}
+              className="w-full mt-4 py-2 text-[#2E8B57] font-bold text-sm 
+                       hover:bg-[#2E8B57]/5 rounded-lg transition-all 
+                       hover:scale-105 active:scale-95"
+            >
+              View All Submissions
+            </button>
+          </section>
+
+          {/* Institution Info Card */}
+          <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-2xl
+                            hover:scale-[1.02] transition-all duration-500">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="size-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <HistoryIcon className="text-[#2E8B57]" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Member Since</p>
+                <p className="text-[10px] text-white/60 uppercase tracking-widest">
+                  January 2023
+                </p>
+              </div>
+            </div>
+            
+            <p className="text-xs text-white/80 leading-relaxed">
+              Your institution has been actively participating in the program for over 1 year.
+              Total children supported: <span className="text-[#2E8B57] font-bold">128</span>
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============== Main InstitutionDashboard Component ==============
+
+const InstitutionDashboard: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [activePage, setActivePage] = useState('dashboard');
+  const [showNotifications, setShowNotifications] = useState(false);
+
   // Notifications data
   const notifications: Notification[] = [
     {
@@ -654,36 +962,6 @@ const InstitutionDashboard: React.FC = () => {
     }
   ];
 
-  // Quick actions data
-  const quickActions = [
-    { id: 1, label: 'New Child Profile', icon: PersonAddIcon },
-    { id: 2, label: 'Log Weekly Report', icon: PostAddIcon },
-    { id: 3, label: 'Contact Regional Admin', icon: ContactSupportIcon }
-    // Removed "Generate Report" quick action to match sidebar removal
-  ];
-
-  // Activities data
-  const activities = [
-    {
-      id: 1,
-      icon: <MedicalServicesIcon />,
-      title: 'Health checkup completed',
-      childName: 'Abebe Kebede',
-      timestamp: 'Today, 10:30 AM',
-      description: 'Routine quarterly checkup. Results within normal ranges.',
-      type: 'health'
-    },
-    {
-      id: 2,
-      icon: <CheckCircleIcon />,
-      title: 'Submission approved',
-      childName: 'Tigist Alemu',
-      timestamp: '2 days ago',
-      description: 'Child profile has been approved and is now visible to sponsors.',
-      type: 'submission'
-    }
-  ];
-
   const user: User = {
     name: 'Abeba Tesfaye',
     email: 'abeba.tesfaye@stgabriel.org',
@@ -703,22 +981,46 @@ const InstitutionDashboard: React.FC = () => {
     setActivePage('settings');
   };
 
-  // Chart data
-  const chartData = [
-    { month: 'May', value: 40 },
-    { month: 'Jun', value: 65 },
-    { month: 'Jul', value: 55 },
-    { month: 'Aug', value: 85 },
-    { month: 'Sep', value: 95 },
-    { month: 'Oct', value: 60 }
-  ];
+  const handleNavigate = (page: string) => {
+    setActivePage(page);
+  };
 
-  const getActivityColor = (type: string) => {
-    switch(type) {
-      case 'health': return 'text-blue-500 bg-blue-50';
-      case 'education': return 'text-purple-500 bg-purple-50';
-      case 'submission': return 'text-orange-500 bg-orange-50';
-      default: return 'text-slate-500 bg-slate-50';
+  // Render the appropriate page based on activePage
+  const renderPage = () => {
+    switch(activePage) {
+      case 'dashboard':
+        return <DashboardHome onNavigate={handleNavigate} />;
+      case 'submit':
+        return <ChildSubmissions onNavigate={handleNavigate} />;
+      case 'submissions':
+        return <SubmissionStatusPage onNavigate={handleNavigate} />;
+      case 'InterventionLogs':
+        return <InterventionLogs onNavigate={handleNavigate} />;
+         
+     
+      case 'children':
+        return (
+          <div className="p-8 text-center text-slate-500">
+            <h2 className="text-2xl font-bold">Children List Page</h2>
+            <p>Coming soon...</p>
+          </div>
+        );
+      case 'profile':
+        return (
+          <div className="p-8 text-center text-slate-500">
+            <h2 className="text-2xl font-bold">Profile Page</h2>
+            <p>Coming soon...</p>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div className="p-8 text-center text-slate-500">
+            <h2 className="text-2xl font-bold">Settings Page</h2>
+            <p>Coming soon...</p>
+          </div>
+        );
+      default:
+        return <DashboardHome onNavigate={handleNavigate} />;
     }
   };
 
@@ -750,7 +1052,13 @@ const InstitutionDashboard: React.FC = () => {
               {/* Page Title */}
               <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E8B57] to-[#3CB371] 
                            bg-clip-text text-transparent animate-slideIn">
-                Institution Dashboard
+                {activePage === 'dashboard' && 'Dashboard'}
+                {activePage === 'submit' && 'Submit Child Profile'}
+                {activePage === 'submissions' && 'Submission Status'}
+                {activePage === 'InterventionLogs' && 'Intervention Log'}
+                {activePage === 'children' && 'Children List'}
+                {activePage === 'profile' && 'My Profile'}
+                {activePage === 'settings' && 'Settings'}
               </h1>
             </div>
             
@@ -795,240 +1103,8 @@ const InstitutionDashboard: React.FC = () => {
         </header>
 
         {/* Dashboard Content */}
-        <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-8 animate-fadeIn">
-          {/* Animated Welcome Banner */}
-          <div className={`
-            relative bg-gradient-to-r from-[#2E8B57] to-[#3CB371] rounded-2xl p-8 text-white overflow-hidden shadow-xl
-            transition-all duration-500 transform hover:scale-[1.02] cursor-pointer
-            ${showWelcome ? 'opacity-100' : 'opacity-90'}
-          `}
-          onClick={() => setShowWelcome(!showWelcome)}
-          >
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-white rounded-full animate-pulse" />
-              <div className="absolute -right-20 -bottom-20 w-60 h-60 bg-white rounded-full animate-pulse delay-1000" />
-            </div>
-            
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-sm font-semibold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">
-                  Welcome Back
-                </span>
-              </div>
-              <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
-                St. Gabriel Center 👋
-              </h2>
-              <p className="text-white/90 leading-relaxed max-w-2xl text-lg">
-                You're making a difference in the lives of 128 children. Track your impact, 
-                manage submissions, and monitor interventions all in one place.
-              </p>
-            </div>
-          </div>
-
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <div
-                key={stat.id}
-                className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl 
-                         transition-all duration-500 transform hover:-translate-y-2 cursor-pointer
-                         border border-slate-100 overflow-hidden"
-                onMouseEnter={() => setHoveredStat(index)}
-                onMouseLeave={() => setHoveredStat(null)}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#2E8B57] to-[#3CB371] opacity-0 
-                              group-hover:opacity-5 transition-opacity duration-500" />
-                
-                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-slate-100 rounded-full 
-                              group-hover:scale-150 transition-transform duration-700" />
-                
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <stat.icon className={`
-                      text-3xl transition-all duration-500
-                      ${hoveredStat === index ? 'scale-110 rotate-12' : ''}
-                      text-[#2E8B57]
-                    `} />
-                    {stat.trend && (
-                      <span className={`
-                        text-xs font-bold px-2 py-1 rounded-full transition-all duration-500
-                        ${hoveredStat === index ? 'bg-[#2E8B57] text-white' : 'bg-green-100 text-green-700'}
-                      `}>
-                        {stat.trend}
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-3xl font-bold mb-1">{stat.value}</p>
-                  <p className="text-sm text-slate-500">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Main Grid */}
-          <div className="grid grid-cols-12 gap-8">
-            {/* Left Column */}
-            <div className="col-span-12 lg:col-span-8 space-y-8">
-              {/* Action Required */}
-              <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-xl transition-all duration-500">
-                <div className="p-6 border-b border-slate-200 flex justify-between items-center">
-                  <h3 className="text-lg font-bold flex items-center gap-2">
-                    <WarningIcon className="text-amber-500" />
-                    Action Required
-                  </h3>
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase animate-pulse">
-                    3 Needs Correction
-                  </span>
-                </div>
-                <div className="divide-y divide-slate-200">
-                  {actionItems.map(item => (
-                    <ActionItem key={item.id} item={item} />
-                  ))}
-                </div>
-              </section>
-
-              {/* Activity Timeline */}
-              <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
-                <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
-                <div className="space-y-6">
-                  {activities.map((activity, index) => (
-                    <div key={activity.id} className="flex gap-4 group">
-                      <div className="relative">
-                        <div className={`
-                          w-12 h-12 rounded-2xl flex items-center justify-center
-                          transition-all duration-300 group-hover:scale-110 group-hover:rotate-6
-                          ${getActivityColor(activity.type)}
-                        `}>
-                          {activity.icon}
-                        </div>
-                        {index < activities.length - 1 && (
-                          <div className="absolute top-12 bottom-[-24px] left-1/2 -translate-x-1/2 
-                                        w-0.5 bg-gradient-to-b from-[#2E8B57]/20 to-transparent" />
-                        )}
-                      </div>
-                      
-                      <div className="flex-1">
-                        <p className="font-bold group-hover:text-[#2E8B57] transition-colors">
-                          {activity.title}
-                        </p>
-                        <p className="text-xs text-slate-500 mb-2 flex items-center gap-2">
-                          <span className="font-medium">{activity.childName}</span>
-                          <span>•</span>
-                          <span>{activity.timestamp}</span>
-                        </p>
-                        <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 
-                                  p-3 rounded-xl group-hover:bg-slate-100 transition-colors">
-                          {activity.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Chart Section */}
-              <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
-                <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-                  <h3 className="text-lg font-bold">Support Impact Tracking</h3>
-                  <select
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    className="text-sm border-slate-200 rounded-lg focus:ring-[#2E8B57] focus:border-[#2E8B57] px-3 py-2 bg-slate-50"
-                  >
-                    <option value="6">Last 6 Months</option>
-                    <option value="12">Last 12 Months</option>
-                  </select>
-                </div>
-
-                <div className="h-64 flex items-end gap-4 px-2">
-                  {chartData.map((data, index) => {
-                    const opacity = ['20', '40', '60', '80', '', '30'][index];
-                    const bgColor = opacity ? `bg-[#2E8B57]/${opacity}` : 'bg-[#2E8B57]';
-                    
-                    return (
-                      <div key={data.month} className="flex-1 flex flex-col items-center gap-2 group">
-                        <div 
-                          className={`w-full ${bgColor} group-hover:opacity-80 rounded-t transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-[#2E8B57]/20`}
-                          style={{ height: `${data.value}%` }}
-                        />
-                        <span className="text-xs font-medium text-slate-400">{data.month}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#2E8B57]"></span>
-                    <span className="text-slate-500">Nutritional Support</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#2E8B57]/30"></span>
-                    <span className="text-slate-500">Health Interventions</span>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            {/* Right Column */}
-            <div className="col-span-12 lg:col-span-4 space-y-8">
-              {/* Quick Actions */}
-              <section className="bg-[#2E8B57]/5 p-6 rounded-2xl border border-[#2E8B57]/20 hover:shadow-xl transition-all duration-500">
-                <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-                <div className="space-y-3">
-                  {quickActions.map(action => (
-                    <button
-                      key={action.id}
-                      className="w-full flex items-center justify-start gap-3 p-4 bg-white rounded-lg 
-                               border border-slate-200 hover:border-[#2E8B57] transition-all 
-                               group hover:scale-[1.02] active:scale-95"
-                    >
-                      <action.icon className="text-[#2E8B57] group-hover:scale-110 
-                                            transition-transform duration-300" />
-                      <span className="font-medium text-sm">{action.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-              {/* Recent Submissions */}
-              <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
-                <h3 className="text-lg font-bold mb-4">Recent Submissions</h3>
-                <div className="space-y-4">
-                  {recentSubmissions.map(submission => (
-                    <RecentSubmission key={submission.id} submission={submission} />
-                  ))}
-                </div>
-                <button className="w-full mt-4 py-2 text-[#2E8B57] font-bold text-sm 
-                                 hover:bg-[#2E8B57]/5 rounded-lg transition-all 
-                                 hover:scale-105 active:scale-95">
-                  View All Activities
-                </button>
-              </section>
-
-              {/* Institution Info Card */}
-              <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-2xl
-                                hover:scale-[1.02] transition-all duration-500">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="size-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    <HistoryIcon className="text-[#2E8B57]" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">Member Since</p>
-                    <p className="text-[10px] text-white/60 uppercase tracking-widest">
-                      January 2023
-                    </p>
-                  </div>
-                </div>
-                
-                <p className="text-xs text-white/80 leading-relaxed">
-                  Your institution has been actively participating in the program for over 1 year.
-                  Total children supported: <span className="text-[#2E8B57] font-bold">128</span>
-                </p>
-              </section>
-            </div>
-          </div>
+        <div className="animate-fadeIn">
+          {renderPage()}
         </div>
       </main>
 
