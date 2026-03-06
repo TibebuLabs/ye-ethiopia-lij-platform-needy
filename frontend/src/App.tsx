@@ -23,7 +23,7 @@ function App() {
          <Route path="/admin/*" element={<AdminRoutes />} />
          <Route path="/pm/*" element={<PMRoutes />} />
          <Route path="/school/*" element={<SchoolRoutes />} />
-                 <Route path="/institution/*" element={<InstitutionRoutes />} />
+              <Route path="/institution/*" element={<InstitutionRoutes />} />
 
         
         {/* Redirect root to login (or you can keep it as sponsor dashboard) */}
