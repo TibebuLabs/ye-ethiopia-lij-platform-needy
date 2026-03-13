@@ -77,14 +77,14 @@ const ComparisonField: React.FC<ComparisonFieldProps> = ({
         };
       case 'conflict':
         return {
-          bg: 'bg-red-50 dark:bg-red-900/10',
+          bg: 'bg-red-50',
           border: 'border-red-400',
           text: 'text-red-500',
           icon: <ErrorIcon className="text-sm" />
         };
       case 'partial':
         return {
-          bg: 'bg-amber-50 dark:bg-amber-900/10',
+          bg: 'bg-amber-50',
           border: 'border-amber-400',
           text: 'text-amber-500',
           icon: <WarningIcon className="text-sm" />
@@ -124,13 +124,13 @@ const ComparisonField: React.FC<ComparisonFieldProps> = ({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="text-sm text-slate-500 mb-1">Existing Record</p>
-          <p className="text-base font-semibold text-slate-900 dark:text-white">
+          <p className="text-base font-semibold text-slate-900">
             {existingValue}
           </p>
         </div>
         <div>
           <p className="text-sm text-slate-500 mb-1">New Submission</p>
-          <p className="text-base font-semibold text-slate-900 dark:text-white">
+          <p className="text-base font-semibold text-slate-900">
             {newValue}
           </p>
           {status !== 'match' && (
@@ -177,7 +177,7 @@ const ResolutionOption: React.FC<ResolutionOptionProps> = ({
         };
       case 'red':
         return {
-          default: 'border-slate-200 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/10',
+          default: 'border-slate-200 hover:border-red-500 hover:bg-red-50',
           selected: 'border-red-500 bg-red-500 text-white hover:bg-red-600',
           icon: 'text-red-300 group-hover:text-red-500',
           selectedIcon: 'text-white'
@@ -217,7 +217,7 @@ const ResolutionOption: React.FC<ResolutionOptionProps> = ({
         group-hover:scale-110
       `} />
       <div className="text-center">
-        <p className={`font-bold text-sm ${isSelected ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
+        <p className={`font-bold text-sm ${isSelected ? 'text-white' : 'text-slate-900'}`}>
           {title}
         </p>
         <p className={`text-xs mt-1 ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>
@@ -308,7 +308,7 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F8F9FA] dark:bg-slate-900">
+    <div className="flex-1 overflow-y-auto bg-[#F8F9FA]">
       <div className="p-4 lg:p-8 max-w-[1400px] mx-auto w-full">
         {/* Breadcrumbs & Header */}
         <div className="flex flex-col gap-2 mb-6">
@@ -321,7 +321,7 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
               Alerts
             </button>
             <ChevronRightIcon className="text-xs text-slate-400" />
-            <span className="text-slate-600 dark:text-slate-400">
+            <span className="text-slate-600">
               Conflict UC-09
             </span>
           </div>
@@ -348,21 +348,19 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
             
             <div className="flex gap-3">
               <button className="flex items-center gap-2 px-4 py-2.5 
-                               bg-white dark:bg-slate-900 
-                               border border-slate-200 dark:border-slate-800 
+                               bg-white border border-slate-200 
                                rounded-xl text-sm font-bold 
-                               hover:bg-slate-50 dark:hover:bg-slate-800 
-                               transition-all hover:scale-105 active:scale-95">
+                               hover:bg-slate-50 transition-all 
+                               hover:scale-105 active:scale-95">
                 <HistoryIcon className="text-sm" />
                 View Audit Log
               </button>
               
               <button className="flex items-center gap-2 px-4 py-2.5 
-                               bg-white dark:bg-slate-900 
-                               border border-slate-200 dark:border-slate-800 
+                               bg-white border border-slate-200 
                                rounded-xl text-sm font-bold 
-                               hover:bg-slate-50 dark:hover:bg-slate-800 
-                               transition-all hover:scale-105 active:scale-95">
+                               hover:bg-slate-50 transition-all 
+                               hover:scale-105 active:scale-95">
                 <FlagIcon className="text-sm" />
                 Flag for Review
               </button>
@@ -373,9 +371,8 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
         {/* Comparison Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
           {/* Left Column: Source of Truth */}
-          <div className="lg:col-span-6 bg-white dark:bg-slate-900 
-                        border-2 border-[#2E8B57]/30 rounded-2xl 
-                        overflow-hidden shadow-lg hover:shadow-2xl 
+          <div className="lg:col-span-6 bg-white border-2 border-[#2E8B57]/30 
+                        rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
                         transition-all duration-500">
             <div className="bg-gradient-to-r from-[#2E8B57]/10 to-[#3CB371]/10 
                           px-6 py-4 border-b border-[#2E8B57]/20 
@@ -408,7 +405,7 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
                     Source
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <h3 className="text-2xl font-bold text-slate-900">
                   {existingRecord.name}
                 </h3>
                 <p className="text-slate-500 text-sm">{existingRecord.id}</p>
@@ -455,12 +452,10 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
           </div>
 
           {/* Right Column: New Submission */}
-          <div className="lg:col-span-6 bg-white dark:bg-slate-900 
-                        border-2 border-slate-200 dark:border-slate-800 
+          <div className="lg:col-span-6 bg-white border-2 border-slate-200 
                         rounded-2xl overflow-hidden shadow-lg 
                         hover:shadow-2xl transition-all duration-500">
-            <div className="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 
-                          border-b border-slate-200 dark:border-slate-800 
+            <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 
                           flex justify-between items-center">
               <span className="text-slate-500 font-bold text-xs uppercase tracking-widest">
                 New Submission
@@ -484,7 +479,7 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
                     />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <h3 className="text-2xl font-bold text-slate-900">
                   {newSubmission.name}
                 </h3>
                 <p className="text-slate-500 text-sm">{newSubmission.id}</p>
@@ -512,12 +507,11 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
         </div>
 
         {/* Resolution Actions */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 
-                      dark:border-slate-800 rounded-2xl p-8 shadow-lg 
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-lg 
                       hover:shadow-2xl transition-all duration-500">
           <div className="flex flex-col gap-6">
-            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 
-                         uppercase tracking-wide flex items-center gap-2">
+            <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide 
+                         flex items-center gap-2">
               <MergeIcon className="text-[#2E8B57]" />
               Resolution Decision
             </h4>
@@ -552,17 +546,15 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
             </div>
             
             <div className="mt-4">
-              <label className="block text-sm font-medium text-slate-700 
-                              dark:text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Resolution Note (Optional)
               </label>
               <textarea
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 
-                         dark:border-slate-700 focus:ring-[#2E8B57] 
-                         focus:border-[#2E8B57] bg-slate-50 dark:bg-slate-800 
-                         dark:text-white resize-none"
+                         focus:ring-[#2E8B57] focus:border-[#2E8B57] 
+                         bg-slate-50 resize-none"
                 placeholder="Provide context for your decision..."
                 rows={2}
               />
@@ -596,12 +588,10 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setShowConfirmModal(false)}
             />
-            <div className="relative bg-white dark:bg-slate-900 rounded-2xl 
-                          max-w-md w-full p-6 animate-slideIn shadow-2xl">
+            <div className="relative bg-white rounded-2xl max-w-md w-full p-6 animate-slideIn shadow-2xl">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="absolute top-4 right-4 p-2 hover:bg-slate-100 
-                         dark:hover:bg-slate-800 rounded-lg transition-colors"
+                className="absolute top-4 right-4 p-2 hover:bg-slate-100 rounded-lg transition-colors"
               >
                 <CloseIcon className="text-slate-500" />
               </button>
@@ -618,8 +608,8 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
                 </p>
               </div>
               
-              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl mb-6">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <div className="bg-slate-50 p-4 rounded-xl mb-6">
+                <p className="text-sm font-medium text-slate-700">
                   Selected Action: <span className="text-[#2E8B57] font-bold">
                     {selectedResolution === 'unique' && 'Keep as New (Unique)'}
                     {selectedResolution === 'merge' && 'Merge with Existing'}
@@ -636,10 +626,8 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="flex-1 px-4 py-3 border border-slate-200 
-                           dark:border-slate-700 rounded-xl
-                           hover:bg-slate-50 dark:hover:bg-slate-800 
-                           transition-colors font-medium"
+                  className="flex-1 px-4 py-3 border border-slate-200 rounded-xl
+                           hover:bg-slate-50 transition-colors font-medium text-slate-700"
                 >
                   Cancel
                 </button>
@@ -658,8 +646,7 @@ const DuplicationConflicts: React.FC<DuplicationConflictsProps> = ({ onNavigate 
         )}
 
         {/* Footer */}
-        <footer className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 
-                         text-center">
+        <footer className="mt-8 pt-6 border-t border-slate-200 text-center">
           <p className="text-xs text-slate-400">
             © 2023 Duplication Conflict Resolver System • Version 4.2.0 • Data Security Compliant
           </p>
