@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Group as GroupIcon,
   Search as SearchIcon,
-  Notifications as NotificationsIcon,
-  Settings as SettingsIcon,
   MoreVert as MoreVertIcon,
   Download as DownloadIcon,
   PersonAdd as PersonAddIcon,
@@ -13,16 +11,12 @@ import {
   School as SchoolIcon,
   VolunteerActivism as VolunteerActivismIcon,
   Business as BusinessIcon,
-  Person as PersonIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
   Block as BlockIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
   FilterList as FilterListIcon,
-  Close as CloseIcon,
-  ArrowBack as ArrowBackIcon
+  Close as CloseIcon
 } from '@mui/icons-material';
 
 // ============== Types and Interfaces ==============
@@ -58,10 +52,10 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
 
   const getRoleColor = (role: string) => {
     switch(role) {
-      case 'NGO': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-      case 'Sponsor': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
-      case 'School': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
-      case 'Admin': return 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
+      case 'NGO': return 'bg-blue-100 text-blue-800';
+      case 'Sponsor': return 'bg-purple-100 text-purple-800';
+      case 'School': return 'bg-amber-100 text-amber-800';
+      case 'Admin': return 'bg-slate-200 text-slate-800';
       default: return 'bg-slate-100 text-slate-800';
     }
   };
@@ -70,26 +64,26 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
     switch(status) {
       case 'active':
         return {
-          bg: 'bg-emerald-100 dark:bg-emerald-900/30',
-          text: 'text-emerald-800 dark:text-emerald-400',
+          bg: 'bg-emerald-100',
+          text: 'text-emerald-800',
           dot: 'bg-emerald-500'
         };
       case 'pending':
         return {
-          bg: 'bg-amber-100 dark:bg-amber-900/30',
-          text: 'text-amber-800 dark:text-amber-400',
+          bg: 'bg-amber-100',
+          text: 'text-amber-800',
           dot: 'bg-amber-500'
         };
       case 'suspended':
         return {
-          bg: 'bg-red-100 dark:bg-red-900/30',
-          text: 'text-red-800 dark:text-red-400',
+          bg: 'bg-red-100',
+          text: 'text-red-800',
           dot: 'bg-red-500'
         };
       default:
         return {
-          bg: 'bg-slate-100 dark:bg-slate-800',
-          text: 'text-slate-800 dark:text-slate-400',
+          bg: 'bg-slate-100',
+          text: 'text-slate-800',
           dot: 'bg-slate-500'
         };
     }
@@ -98,7 +92,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
   const statusColors = getStatusColor(user.status);
 
   return (
-    <tr className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-all duration-300 group relative">
+    <tr className="hover:bg-slate-50/80 transition-all duration-300 group relative">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className={`
@@ -110,7 +104,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
             {user.initials}
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900 dark:text-white 
+            <p className="text-sm font-semibold text-slate-900 
                         group-hover:text-[#2E8B57] transition-colors">
               {user.name}
             </p>
@@ -151,25 +145,22 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
         <div className="flex items-center justify-end gap-2">
           <button 
             onClick={() => onAction(user.id, 'view')}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 
-                     rounded-lg text-slate-400 hover:text-[#2E8B57] 
-                     transition-all hover:scale-110"
+            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 
+                     hover:text-[#2E8B57] transition-all hover:scale-110"
           >
             <VisibilityIcon className="text-sm" />
           </button>
           <button 
             onClick={() => onAction(user.id, 'edit')}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 
-                     rounded-lg text-slate-400 hover:text-blue-500 
-                     transition-all hover:scale-110"
+            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 
+                     hover:text-blue-500 transition-all hover:scale-110"
           >
             <EditIcon className="text-sm" />
           </button>
           <button 
             onClick={() => setShowActions(!showActions)}
-            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 
-                     rounded-lg text-slate-400 hover:text-slate-600 
-                     transition-all hover:scale-110 relative"
+            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 
+                     hover:text-slate-600 transition-all hover:scale-110 relative"
           >
             <MoreVertIcon className="text-sm" />
           </button>
@@ -182,8 +173,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
                 onClick={() => setShowActions(false)}
               />
               <div className="absolute right-0 top-12 mt-2 w-48 bg-white 
-                            dark:bg-slate-800 rounded-xl shadow-2xl 
-                            border border-slate-100 dark:border-slate-700 
+                            rounded-xl shadow-2xl border border-slate-100 
                             z-40 overflow-hidden animate-slideIn">
                 <button 
                   onClick={() => {
@@ -192,7 +182,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 
                            text-sm text-amber-600 hover:bg-amber-50 
-                           dark:hover:bg-slate-700 transition-colors"
+                           transition-colors"
                 >
                   <BlockIcon className="text-sm" />
                   Suspend User
@@ -204,7 +194,7 @@ const UserRow: React.FC<UserRowProps> = ({ user, onAction }) => {
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 
                            text-sm text-red-600 hover:bg-red-50 
-                           dark:hover:bg-slate-700 transition-colors"
+                           transition-colors"
                 >
                   <DeleteIcon className="text-sm" />
                   Delete User
@@ -230,24 +220,22 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ icon: Icon, label, value, change, color }) => {
   return (
-    <div className="group bg-white dark:bg-slate-900 rounded-xl p-6 
-                  border border-slate-200 dark:border-slate-800 
+    <div className="group bg-white rounded-xl p-6 border border-slate-200 
                   hover:shadow-2xl transition-all duration-500 
                   hover:-translate-y-2 cursor-pointer relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#2E8B57] to-[#3CB371] 
                     opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
       <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-slate-100 
-                    dark:bg-slate-800 rounded-full group-hover:scale-150 
-                    transition-transform duration-700" />
+                    rounded-full group-hover:scale-150 transition-transform duration-700" />
       
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">
-          <div className={`p-2 rounded-lg bg-${color}-100 dark:bg-${color}-900/30 
+          <div className={`p-2 rounded-lg bg-${color}-100 
                         group-hover:scale-110 group-hover:rotate-6 
                         transition-all duration-300`}>
-            <Icon className={`text-${color}-600 dark:text-${color}-400`} />
+            <Icon className={`text-${color}-600`} />
           </div>
-          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+          <h4 className="text-sm font-bold text-slate-900">
             {label}
           </h4>
         </div>
@@ -269,7 +257,6 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
   const [roleFilter, setRoleFilter] = useState('All Roles');
   const [statusFilter, setStatusFilter] = useState('All Statuses');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Sample users data
@@ -408,7 +395,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F8F9FA] dark:bg-slate-900">
+    <div className="flex-1 overflow-y-auto bg-[#F8F9FA]">
       {/* Page Content */}
       <div className="p-4 lg:p-8 max-w-[1400px] mx-auto w-full space-y-6">
         {/* Page Header */}
@@ -418,7 +405,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                          to-[#3CB371] bg-clip-text text-transparent">
               User Management
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-base font-normal mt-1">
+            <p className="text-slate-500 text-base font-normal mt-1">
               Review system users, roles, and account permissions across the platform.
             </p>
           </div>
@@ -427,11 +414,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
             <button 
               onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2.5 
-                       bg-white dark:bg-slate-900 
-                       border border-slate-200 dark:border-slate-800 
-                       rounded-xl text-slate-700 dark:text-slate-300 
-                       text-sm font-bold hover:bg-slate-50 
-                       dark:hover:bg-slate-800 transition-all 
+                       bg-white border border-slate-200 
+                       rounded-xl text-slate-700 text-sm font-bold 
+                       hover:bg-slate-50 transition-all 
                        hover:scale-105 active:scale-95"
             >
               <DownloadIcon className="text-sm" />
@@ -489,8 +474,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl 
-                      border border-slate-200 dark:border-slate-800 
+        <div className="bg-white p-4 rounded-xl border border-slate-200 
                       shadow-sm flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
             <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 
@@ -500,7 +484,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, email, or ID..."
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 
                        border-none rounded-xl text-sm 
                        focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20 
                        transition-all placeholder:text-slate-400"
@@ -513,9 +497,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full appearance-none bg-slate-50 dark:bg-slate-800 
+                className="w-full appearance-none bg-slate-50 
                          border-none rounded-xl py-2.5 pl-4 pr-10 
-                         text-sm font-medium text-slate-700 dark:text-slate-300 
+                         text-sm font-medium text-slate-700 
                          focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20 
                          cursor-pointer"
               >
@@ -534,9 +518,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full appearance-none bg-slate-50 dark:bg-slate-800 
+                className="w-full appearance-none bg-slate-50 
                          border-none rounded-xl py-2.5 pl-4 pr-10 
-                         text-sm font-medium text-slate-700 dark:text-slate-300 
+                         text-sm font-medium text-slate-700 
                          focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20 
                          cursor-pointer"
               >
@@ -550,25 +534,22 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
             </div>
 
             {/* Filter Button */}
-            <button className="p-2.5 bg-slate-50 dark:bg-slate-800 
-                            rounded-xl text-slate-600 dark:text-slate-400 
-                            hover:bg-slate-100 dark:hover:bg-slate-700 
-                            transition-all hover:scale-105 active:scale-95">
+            <button className="p-2.5 bg-slate-50 rounded-xl text-slate-600 
+                            hover:bg-slate-100 transition-all hover:scale-105 
+                            active:scale-95">
               <FilterListIcon className="text-sm" />
             </button>
           </div>
         </div>
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl 
-                      border border-slate-200 dark:border-slate-800 
+        <div className="bg-white rounded-xl border border-slate-200 
                       shadow-sm overflow-hidden hover:shadow-2xl 
                       transition-all duration-500">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/50 
-                            border-b border-slate-200 dark:border-slate-800">
+                <tr className="bg-slate-50 border-b border-slate-200">
                   <th className="px-6 py-4 text-xs font-bold uppercase 
                                tracking-wider text-slate-500">Name</th>
                   <th className="px-6 py-4 text-xs font-bold uppercase 
@@ -585,7 +566,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {paginatedUsers.map((user) => (
                   <UserRow 
                     key={user.id} 
@@ -606,7 +587,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
           {/* Pagination */}
           <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center 
                         justify-between gap-4 border-t border-slate-100 
-                        dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+                        bg-slate-50/50">
             <p className="text-sm text-slate-500">
               Showing <span className="font-semibold">
                 {(currentPage - 1) * usersPerPage + 1}-
@@ -619,11 +600,11 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="flex items-center justify-center size-8 
-                         rounded-lg border border-slate-200 dark:border-slate-700 
-                         bg-white dark:bg-slate-900 text-slate-400 
+                         rounded-lg border border-slate-200 
+                         bg-white text-slate-400 
                          disabled:opacity-50 disabled:cursor-not-allowed
-                         hover:bg-slate-50 dark:hover:bg-slate-800 
-                         transition-all hover:scale-105 active:scale-95"
+                         hover:bg-slate-50 transition-all hover:scale-105 
+                         active:scale-95"
               >
                 <ChevronLeftIcon className="text-sm" />
               </button>
@@ -640,7 +621,7 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                       active:scale-95
                       ${currentPage === pageNum
                         ? 'bg-gradient-to-r from-[#2E8B57] to-[#3CB371] text-white shadow-lg'
-                        : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50'
+                        : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                       }
                     `}
                   >
@@ -656,10 +637,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                     onClick={() => setCurrentPage(totalPages)}
                     className="flex items-center justify-center size-8 
                              rounded-lg border border-slate-200 
-                             dark:border-slate-700 bg-white dark:bg-slate-900 
-                             text-slate-600 dark:text-slate-400 text-xs 
-                             font-bold hover:bg-slate-50 dark:hover:bg-slate-800 
-                             transition-all hover:scale-105 active:scale-95"
+                             bg-white text-slate-600 text-xs 
+                             font-bold hover:bg-slate-50 transition-all 
+                             hover:scale-105 active:scale-95"
                   >
                     {totalPages}
                   </button>
@@ -670,11 +650,11 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="flex items-center justify-center size-8 
-                         rounded-lg border border-slate-200 dark:border-slate-700 
-                         bg-white dark:bg-slate-900 text-slate-400 
+                         rounded-lg border border-slate-200 
+                         bg-white text-slate-400 
                          disabled:opacity-50 disabled:cursor-not-allowed
-                         hover:bg-slate-50 dark:hover:bg-slate-800 
-                         transition-all hover:scale-105 active:scale-95"
+                         hover:bg-slate-50 transition-all hover:scale-105 
+                         active:scale-95"
               >
                 <ChevronRightIcon className="text-sm" />
               </button>
@@ -689,12 +669,11 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setShowCreateModal(false)}
             />
-            <div className="relative bg-white dark:bg-slate-900 rounded-2xl 
-                          max-w-md w-full p-6 animate-slideIn shadow-2xl">
+            <div className="relative bg-white rounded-2xl max-w-md w-full p-6 animate-slideIn shadow-2xl">
               <button 
                 onClick={() => setShowCreateModal(false)}
                 className="absolute top-4 right-4 p-2 hover:bg-slate-100 
-                         dark:hover:bg-slate-800 rounded-lg transition-colors"
+                         rounded-lg transition-colors"
               >
                 <CloseIcon className="text-slate-500" />
               </button>
@@ -711,33 +690,33 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
               
               <form className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 
-                             rounded-xl border border-slate-200 dark:border-slate-700
-                             focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl 
+                             border border-slate-200 focus:outline-none 
+                             focus:ring-2 focus:ring-[#2E8B57]/20"
                     placeholder="Enter full name"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
                   <input
                     type="email"
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 
-                             rounded-xl border border-slate-200 dark:border-slate-700
-                             focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl 
+                             border border-slate-200 focus:outline-none 
+                             focus:ring-2 focus:ring-[#2E8B57]/20"
                     placeholder="Enter email address"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Role</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Role</label>
                   <select
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 
-                             rounded-xl border border-slate-200 dark:border-slate-700
-                             focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20"
+                    className="w-full px-4 py-3 bg-slate-50 rounded-xl 
+                             border border-slate-200 focus:outline-none 
+                             focus:ring-2 focus:ring-[#2E8B57]/20"
                   >
                     <option>Super Admin</option>
                     <option>Admin</option>
@@ -751,9 +730,8 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
                     type="button"
                     onClick={() => setShowCreateModal(false)}
                     className="flex-1 px-4 py-3 border border-slate-200 
-                             dark:border-slate-700 rounded-xl
-                             hover:bg-slate-50 dark:hover:bg-slate-800 
-                             transition-colors font-medium"
+                             rounded-xl hover:bg-slate-50 
+                             transition-colors font-medium text-slate-700"
                   >
                     Cancel
                   </button>
@@ -772,6 +750,24 @@ const UserManagement: React.FC<UserManagementProps> = ({ onNavigate }) => {
           </div>
         )}
       </div>
+
+      {/* Custom Animations */}
+      <style>{`
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };

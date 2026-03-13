@@ -99,8 +99,7 @@ const LogEntry: React.FC<LogEntryProps> = ({ entry, onViewDetails }) => {
   };
 
   return (
-    <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/50 
-                  transition-all duration-300 group cursor-pointer
+    <tr className="hover:bg-slate-50 transition-all duration-300 group cursor-pointer
                   relative overflow-hidden">
       {/* Hover effect line */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b 
@@ -118,7 +117,7 @@ const LogEntry: React.FC<LogEntryProps> = ({ entry, onViewDetails }) => {
       </td>
       
       <td className="px-6 py-4">
-        <div className="text-sm font-semibold text-slate-900 dark:text-white
+        <div className="text-sm font-semibold text-slate-900
                       group-hover:text-[#2E8B57] transition-colors">
           {entry.timestamp}
         </div>
@@ -140,7 +139,7 @@ const LogEntry: React.FC<LogEntryProps> = ({ entry, onViewDetails }) => {
             {entry.user.initials}
           </div>
           <div>
-            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+            <div className="text-sm font-semibold text-slate-900">
               {entry.user.name}
             </div>
             <div className="text-[10px] text-slate-500 flex items-center gap-1">
@@ -164,8 +163,7 @@ const LogEntry: React.FC<LogEntryProps> = ({ entry, onViewDetails }) => {
       
       <td className="px-6 py-4">
         <span className="text-sm font-mono text-slate-500 
-                       bg-slate-50 dark:bg-slate-800/50 
-                       px-2 py-1 rounded-lg">
+                       bg-slate-50 px-2 py-1 rounded-lg">
           {entry.recordId}
         </span>
       </td>
@@ -215,8 +213,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
   onRefresh
 }) => {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 
-                  border border-slate-200 dark:border-slate-800 
+    <div className="bg-white rounded-2xl p-6 border border-slate-200 
                   shadow-lg hover:shadow-2xl transition-all duration-500">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Date Range */}
@@ -233,7 +230,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
               type="text"
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 
                        border-none rounded-xl text-sm 
                        focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20
                        placeholder:text-slate-400"
@@ -252,7 +249,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 
+            className="w-full px-4 py-2.5 bg-slate-50 
                      border-none rounded-xl text-sm 
                      focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20
                      cursor-pointer appearance-none"
@@ -275,7 +272,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 
+            className="w-full px-4 py-2.5 bg-slate-50 
                      border-none rounded-xl text-sm 
                      focus:outline-none focus:ring-2 focus:ring-[#2E8B57]/20
                      cursor-pointer appearance-none"
@@ -306,10 +303,9 @@ const FilterSection: React.FC<FilterSectionProps> = ({
           </button>
           <button
             onClick={onRefresh}
-            className="p-2.5 border border-slate-200 dark:border-slate-700 
+            className="p-2.5 border border-slate-200 
                      text-slate-500 rounded-xl hover:bg-slate-50 
-                     dark:hover:bg-slate-800 transition-all 
-                     hover:scale-110 active:scale-95
+                     transition-all hover:scale-110 active:scale-95
                      hover:rotate-90 duration-500"
           >
             <RefreshIcon className="text-sm" />
@@ -319,7 +315,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 
       {/* Ethiopian Date Toggle */}
       <div className="mt-4 flex items-center gap-4 pt-4 border-t 
-                    border-slate-100 dark:border-slate-800">
+                    border-slate-100">
         <label className="flex items-center gap-2 cursor-pointer group">
           <input
             type="checkbox"
@@ -330,8 +326,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
                      transition-all duration-300
                      group-hover:scale-110"
           />
-          <span className="text-xs font-medium text-slate-600 
-                         dark:text-slate-400 flex items-center gap-1
+          <span className="text-xs font-medium text-slate-600 flex items-center gap-1
                          group-hover:text-[#2E8B57] transition-colors">
             <LanguageIcon className="text-sm" />
             Show Ethiopian Date (GC to EC)
@@ -362,15 +357,15 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange
 }) => {
   return (
-    <div className="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/20 
-                  border-t border-slate-200 dark:border-slate-800
+    <div className="px-6 py-4 bg-slate-50/50 
+                  border-t border-slate-200
                   flex flex-col sm:flex-row sm:items-center 
                   justify-between gap-4">
       <p className="text-xs text-slate-500">
-        Showing <span className="font-bold text-slate-900 dark:text-white">
+        Showing <span className="font-bold text-slate-900">
           {startEntry}-{endEntry}
         </span> of{' '}
-        <span className="font-bold text-slate-900 dark:text-white">
+        <span className="font-bold text-slate-900">
           {totalEntries}
         </span> entries
       </p>
@@ -379,11 +374,11 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-2 border border-slate-200 dark:border-slate-700 
-                   rounded-lg bg-white dark:bg-slate-900 
+          className="p-2 border border-slate-200 
+                   rounded-lg bg-white 
                    text-slate-400 disabled:opacity-50 
                    disabled:cursor-not-allowed
-                   hover:bg-slate-50 dark:hover:bg-slate-800 
+                   hover:bg-slate-50 
                    transition-all hover:scale-110 active:scale-95"
         >
           <ChevronLeftIcon className="text-sm" />
@@ -400,7 +395,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 transition-all hover:scale-110 active:scale-95
                 ${currentPage === pageNum
                   ? 'bg-gradient-to-r from-[#2E8B57] to-[#3CB371] text-white shadow-lg'
-                  : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50'
+                  : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
                 }
               `}
             >
@@ -415,9 +410,9 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
               onClick={() => onPageChange(totalPages)}
               className="min-w-[32px] h-8 rounded-lg text-xs font-bold
-                       border border-slate-200 dark:border-slate-700 
-                       bg-white dark:bg-slate-900 text-slate-600 
-                       dark:text-slate-400 hover:bg-slate-50
+                       border border-slate-200 
+                       bg-white text-slate-600 
+                       hover:bg-slate-50
                        transition-all hover:scale-110 active:scale-95"
             >
               {totalPages}
@@ -428,11 +423,11 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-2 border border-slate-200 dark:border-slate-700 
-                   rounded-lg bg-white dark:bg-slate-900 
+          className="p-2 border border-slate-200 
+                   rounded-lg bg-white 
                    text-slate-400 disabled:opacity-50 
                    disabled:cursor-not-allowed
-                   hover:bg-slate-50 dark:hover:bg-slate-800 
+                   hover:bg-slate-50 
                    transition-all hover:scale-110 active:scale-95"
         >
           <ChevronRightIcon className="text-sm" />
@@ -458,12 +453,10 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ entry, onClose }) => 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white dark:bg-slate-900 rounded-2xl 
-                    max-w-lg w-full p-6 animate-slideIn shadow-2xl">
+      <div className="relative bg-white rounded-2xl max-w-lg w-full p-6 animate-slideIn shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-slate-100 
-                   dark:hover:bg-slate-800 rounded-lg transition-colors"
+          className="absolute top-4 right-4 p-2 hover:bg-slate-100 rounded-lg transition-colors"
         >
           <CloseIcon className="text-slate-500" />
         </button>
@@ -479,7 +472,7 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ entry, onClose }) => 
         </div>
         
         <div className="space-y-4">
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+          <div className="bg-slate-50 p-4 rounded-xl">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-10 rounded-xl bg-[#2E8B57]/10 
                             flex items-center justify-center">
@@ -504,8 +497,7 @@ const LogDetailsModal: React.FC<LogDetailsModalProps> = ({ entry, onClose }) => 
             </div>
           </div>
           
-          <div className="p-4 rounded-xl border border-slate-200 
-                        dark:border-slate-700">
+          <div className="p-4 rounded-xl border border-slate-200">
             <p className="text-xs text-slate-500 mb-2">Action Details</p>
             <p className="text-sm">{entry.action.description}</p>
             <div className="mt-3 flex gap-2">
@@ -663,7 +655,7 @@ const AuditLogs: React.FC<AuditLogsProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F8F9FA] dark:bg-slate-900">
+    <div className="flex-1 overflow-y-auto bg-[#F8F9FA]">
       <div className="p-4 lg:p-8 max-w-[1400px] mx-auto w-full space-y-6">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -680,10 +672,9 @@ const AuditLogs: React.FC<AuditLogsProps> = ({ onNavigate }) => {
           <button
             onClick={handleExport}
             className="flex items-center gap-2 px-4 py-2.5 
-                     bg-white dark:bg-slate-900 
-                     border border-slate-200 dark:border-slate-800 
+                     bg-white border border-slate-200 
                      rounded-xl text-sm font-bold 
-                     hover:bg-slate-50 dark:hover:bg-slate-800 
+                     hover:bg-slate-50 
                      transition-all hover:scale-105 active:scale-95
                      relative overflow-hidden group"
           >
@@ -710,14 +701,12 @@ const AuditLogs: React.FC<AuditLogsProps> = ({ onNavigate }) => {
         />
 
         {/* Logs Table */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl 
-                      border border-slate-200 dark:border-slate-800 
+        <div className="bg-white rounded-2xl border border-slate-200 
                       shadow-lg overflow-hidden hover:shadow-2xl 
                       transition-all duration-500">
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 
-                             border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-[11px] uppercase tracking-wider 
                                text-slate-500 font-bold w-12">Log</th>
@@ -733,7 +722,7 @@ const AuditLogs: React.FC<AuditLogsProps> = ({ onNavigate }) => {
                                text-slate-500 font-bold text-right">Details</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {auditEntries.map((entry) => (
                   <LogEntry
                     key={entry.id}
