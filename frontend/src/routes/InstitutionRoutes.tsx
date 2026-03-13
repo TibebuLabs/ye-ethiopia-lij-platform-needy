@@ -18,7 +18,7 @@ const InstitutionRoutes: React.FC = () => {
       <Route path="/dashboard" element={<InstitutionDashboard />} />
       <Route path="/submit-child" element={<InstitutionDashboard />} />
       <Route path="/track-status" element={<InstitutionDashboard />} />
-      <Route path="/InterventionLogs" element={<InstitutionDashboard />} />
+      <Route path="/intervention-logs" element={<InstitutionDashboard />} />
       <Route path="/children" element={<InstitutionDashboard />} />
       <Route path="/reports" element={<InstitutionDashboard />} />
       <Route path="/profile" element={<InstitutionDashboard />} />
