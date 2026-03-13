@@ -14,8 +14,6 @@ import {
   Warning as WarningIcon,
   ImageNotSupported as ImageNotSupportedIcon,
   Description as DescriptionIcon,
-  PostAdd as PostAddIcon,
-  ContactSupport as ContactSupportIcon,
   CheckCircle as CheckCircleIcon,
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
@@ -28,15 +26,20 @@ import {
   History as HistoryIcon,
   Assignment as AssignmentIcon,
   Timeline as TimelineIcon,
-  Public as PublicIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Home as HomeIcon,
+  Favorite as FavoriteIcon,
+  Restaurant as RestaurantIcon,
+  School as SchoolIcon,
+  EmojiPeople as EmojiPeopleIcon,
+  Bed as BedIcon,
+  HealthAndSafety as HealthAndSafetyIcon,
+  ContactSupport as ContactSupportIcon,
+  PostAdd as PostAddIcon
 } from '@mui/icons-material';
 import ChildSubmissions from './SubmitChildProfile';
 import SubmissionStatusPage from './SubmissionStatusPage';
 import InterventionLogs from './InterventionLogs';
-
-// ============== Import Child Components ==============
-
 
 // ============== Types and Interfaces ==============
 
@@ -83,6 +86,27 @@ interface User {
   avatar: string;
 }
 
+interface Child {
+  id: number;
+  name: string;
+  age: number;
+  gender: string;
+  room: string;
+  admissionDate: string;
+  status: 'active' | 'pending' | 'graduated';
+  healthStatus: 'good' | 'needs-attention' | 'critical';
+  educationLevel: string;
+}
+
+interface Activity {
+  id: number;
+  icon: React.ReactNode;
+  title: string;
+  childName: string;
+  timestamp: string;
+  description: string;
+  type: 'health' | 'education' | 'nutrition' | 'general' | 'sponsorship' | 'submission';
+}
 
 // ============== User Menu Component ==============
 
@@ -119,7 +143,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout, onProfile, onSettin
         </div>
       </div>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <>
           <div 
@@ -128,13 +151,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout, onProfile, onSettin
           />
           <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl 
                         border border-slate-100 z-40 overflow-hidden animate-slideIn">
-            {/* User Info */}
             <div className="p-4 bg-gradient-to-r from-[#2E8B57]/10 to-[#3CB371]/10">
               <p className="font-semibold">{user.name}</p>
               <p className="text-xs text-slate-500">{user.email}</p>
             </div>
 
-            {/* Menu Items */}
             <div className="p-2">
               <button 
                 onClick={() => {
@@ -294,7 +315,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Mobile Overlay */}
       {mobileSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 lg:hidden animate-fadeIn"
@@ -311,7 +331,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         border-r border-slate-200 flex flex-col h-full
         shadow-2xl lg:shadow-none
       `}>
-        {/* Logo Area */}
         <div className="relative p-6 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-[#2E8B57]/10 to-transparent" />
           <div className="relative flex items-center justify-between">
@@ -329,13 +348,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               `}>
                 <span className="text-xl font-bold bg-gradient-to-r from-[#2E8B57] to-[#3CB371] 
                                bg-clip-text text-transparent whitespace-nowrap">
-                  Institution Portal
+                  Orphanage
                 </span>
-                <p className="text-xs text-slate-500">St. Gabriel Center</p>
+                <p className="text-xs text-slate-500">Est. 2010 • Addis Ababa</p>
               </div>
             </div>
             
-            {/* Toggle Button */}
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="hidden lg:block p-2 hover:bg-slate-100 rounded-xl transition-all
@@ -346,7 +364,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
           {navigationItems.map((item) => (
             <button
@@ -386,7 +403,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </nav>
 
-        {/* Institution Info */}
         <div className="p-4 border-t border-slate-200">
           <div className="text-xs text-slate-500 text-center">
             <p>v2.4.1 • YEL</p>
@@ -402,24 +418,24 @@ const Sidebar: React.FC<SidebarProps> = ({
 interface StatCardProps {
   stat: StatCard;
   index: number;
+  hoveredStat: number | null;
+  setHoveredStat: (index: number | null) => void;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ stat }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const StatCard: React.FC<StatCardProps> = ({ stat, index, hoveredStat, setHoveredStat }) => {
   return (
     <div
       className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 
                  shadow-sm hover:shadow-xl transition-all duration-500 
                  hover:-translate-y-2 cursor-pointer group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => setHoveredStat(index)}
+      onMouseLeave={() => setHoveredStat(null)}
     >
       <div className="flex items-center gap-4">
         <div className={`
           size-14 rounded-full bg-[#2E8B57]/10 text-[#2E8B57] flex items-center justify-center
           transition-all duration-500 group-hover:scale-110 group-hover:rotate-6
-          ${isHovered ? 'bg-gradient-to-r from-[#2E8B57] to-[#3CB371] text-white' : ''}
+          ${hoveredStat === index ? 'bg-gradient-to-r from-[#2E8B57] to-[#3CB371] text-white' : ''}
         `}>
           <stat.icon className="text-3xl" />
         </div>
@@ -541,6 +557,119 @@ const RecentSubmission: React.FC<RecentSubmissionProps> = ({ submission }) => {
   );
 };
 
+// ============== Children List Component ==============
+
+const ChildrenList: React.FC = () => {
+  const children: Child[] = [
+    {
+      id: 1,
+      name: 'Abebe Kebede',
+      age: 8,
+      gender: 'Male',
+      room: 'Sunshine Room',
+      admissionDate: '2023-01-15',
+      status: 'active',
+      healthStatus: 'good',
+      educationLevel: 'Grade 2'
+    },
+    {
+      id: 2,
+      name: 'Sara Tesfaye',
+      age: 6,
+      gender: 'Female',
+      room: 'Rainbow Room',
+      admissionDate: '2023-03-10',
+      status: 'active',
+      healthStatus: 'needs-attention',
+      educationLevel: 'Kindergarten'
+    },
+    {
+      id: 3,
+      name: 'Mekdes Hailu',
+      age: 10,
+      gender: 'Female',
+      room: 'Star Room',
+      admissionDate: '2022-06-05',
+      status: 'active',
+      healthStatus: 'good',
+      educationLevel: 'Grade 4'
+    }
+  ];
+
+  const getHealthStatusColor = (status: string) => {
+    switch(status) {
+      case 'good': return 'bg-green-50 text-green-700 border border-green-200';
+      case 'needs-attention': return 'bg-orange-50 text-orange-700 border border-orange-200';
+      case 'critical': return 'bg-red-50 text-red-700 border border-red-200';
+      default: return 'bg-gray-50 text-gray-700 border border-gray-200';
+    }
+  };
+
+  return (
+    <div className="space-y-6 p-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2E8B57] to-[#3CB371] bg-clip-text text-transparent">
+            Children in Our Care
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">Manage and view all children records</p>
+        </div>
+        <button className="px-4 py-2 bg-gradient-to-r from-[#2E8B57] to-[#3CB371] text-white rounded-xl
+                         hover:shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+          <PersonAddIcon className="text-sm" />
+          <span>Add New Child</span>
+        </button>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Child</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Age</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Room</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Admission Date</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Health Status</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Education</th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {children.map((child) => (
+                <tr key={child.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#2E8B57]/10 flex items-center justify-center">
+                        <ChildCareIcon className="text-[#2E8B57]" />
+                      </div>
+                      <span className="font-medium text-slate-900">{child.name}</span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-slate-600">{child.age} years</td>
+                  <td className="p-4 text-slate-600">{child.room}</td>
+                  <td className="p-4 text-slate-600">{child.admissionDate}</td>
+                  <td className="p-4">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getHealthStatusColor(child.healthStatus)}`}>
+                      {child.healthStatus.replace('-', ' ')}
+                    </span>
+                  </td>
+                  <td className="p-4 text-slate-600">{child.educationLevel}</td>
+                  <td className="p-4">
+                    <button className="text-[#2E8B57] hover:underline text-sm font-medium">
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ============== Dashboard Home Page ==============
 
 interface DashboardHomeProps {
@@ -552,61 +681,65 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
 
-  // Stats data
   const stats: StatCard[] = [
     {
       id: 'children',
-      label: 'Active Children',
-      value: '128',
+      label: 'Children in Care',
+      value: '42',
       icon: ChildCareIcon,
-      trend: '+12%'
+      trend: '+5'
     },
     {
-      id: 'interventions',
-      label: 'Recent Interventions',
-      value: '45',
-      icon: MedicalServicesIcon,
-      trend: '+8%'
-    },
-    {
-      id: 'pending',
-      label: 'Pending Approvals',
+      id: 'caregivers',
+      label: 'Caregivers',
       value: '12',
-      icon: PendingActionsIcon
+      icon: EmojiPeopleIcon,
+      trend: '+2'
     },
     {
-      id: 'staff',
-      label: 'Staff Members',
-      value: '8',
-      icon: PersonIcon,
-      trend: '+2'
+      id: 'daily-care',
+      label: 'Daily Care Logs',
+      value: '156',
+      icon: FavoriteIcon,
+      trend: '+18%'
+    },
+    {
+      id: 'rooms',
+      label: 'Available Beds',
+      value: '18',
+      icon: BedIcon
     }
   ];
 
-  // Action items data
   const actionItems: ActionItem[] = [
     {
       id: 1,
       name: 'Abebe Kebede',
-      issue: 'Profile photo missing clear lighting. Please re-upload.',
+      issue: 'Medical checkup record missing for this month.',
       icon: ImageNotSupportedIcon,
-      action: 'Correct Profile'
+      action: 'Update'
     },
     {
       id: 2,
       name: 'Sara Tesfaye',
-      issue: 'Intervention log dated 10/12/23 is missing physician signature.',
+      issue: 'School attendance report needs to be submitted.',
       icon: DescriptionIcon,
-      action: 'Update Log'
+      action: 'Submit'
+    },
+    {
+      id: 3,
+      name: 'Daily Nutrition Log',
+      issue: 'Meal tracking incomplete for yesterday.',
+      icon: RestaurantIcon,
+      action: 'Complete'
     }
   ];
 
-  // Recent submissions data
   const recentSubmissions: RecentSubmission[] = [
     {
       id: 1,
       name: 'Mekdes Ayele',
-      type: 'Medical Intervention',
+      type: 'Health Checkup',
       time: '2 hrs ago',
       status: 'pending',
       icon: DescriptionIcon,
@@ -616,7 +749,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
     {
       id: 2,
       name: 'Dawit Belay',
-      type: 'New Profile',
+      type: 'School Report',
       time: '5 hrs ago',
       status: 'approved',
       icon: CheckCircleIcon,
@@ -626,27 +759,26 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
     {
       id: 3,
       name: 'Hirut Bekele',
-      type: 'Educational Grant',
+      type: 'Nutrition Log',
       time: 'Yesterday',
       status: 'review',
-      icon: DescriptionIcon,
+      icon: RestaurantIcon,
       iconBg: 'bg-amber-50',
       iconColor: 'text-amber-600'
     }
   ];
 
-  // Quick actions data
   const quickActions = [
-    { id: 1, label: 'New Child Profile', icon: PersonAddIcon, page: 'submit' },
-    { id: 2, label: 'View Submissions', icon: TrackChangesIcon, page: 'submissions' },
-    { id: 3, label: 'Contact Regional Admin', icon: ContactSupportIcon, page: 'contact' }
+    { id: 1, label: 'Submit Child Profile', icon: PersonAddIcon, page: 'submit' },
+    { id: 2, label: 'Check Submission Status', icon: TrackChangesIcon, page: 'submissions' },
+    { id: 3, label: 'Log Intervention', icon: NoteAltIcon, page: 'intervention' },
+    { id: 4, label: 'View Children List', icon: ChildCareIcon, page: 'children' }
   ];
 
-  // Activities data
-  const activities = [
+  const activities: Activity[] = [
     {
       id: 1,
-      icon: <MedicalServicesIcon />,
+      icon: <HealthAndSafetyIcon />,
       title: 'Health checkup completed',
       childName: 'Abebe Kebede',
       timestamp: 'Today, 10:30 AM',
@@ -656,43 +788,50 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
     {
       id: 2,
       icon: <CheckCircleIcon />,
-      title: 'Submission approved',
-      childName: 'Tigist Alemu',
+      title: 'School supplies distributed',
+      childName: 'All children',
+      timestamp: 'Yesterday',
+      description: 'New textbooks and uniforms delivered.',
+      type: 'education'
+    },
+    {
+      id: 3,
+      icon: <RestaurantIcon />,
+      title: 'Special nutrition program',
+      childName: 'Young children',
       timestamp: '2 days ago',
-      description: 'Child profile has been approved and is now visible to sponsors.',
-      type: 'submission'
+      description: 'Enhanced meal plan started for children under 5.',
+      type: 'nutrition'
     }
   ];
 
-  // Chart data
   const chartData = [
-    { month: 'May', value: 40 },
-    { month: 'Jun', value: 65 },
-    { month: 'Jul', value: 55 },
-    { month: 'Aug', value: 85 },
-    { month: 'Sep', value: 95 },
-    { month: 'Oct', value: 60 }
+    { month: 'May', value: 38 },
+    { month: 'Jun', value: 40 },
+    { month: 'Jul', value: 41 },
+    { month: 'Aug', value: 42 },
+    { month: 'Sep', value: 42 },
+    { month: 'Oct', value: 42 }
   ];
 
   const getActivityColor = (type: string) => {
     switch(type) {
-      case 'health': return 'text-blue-500 bg-blue-50';
+      case 'health': return 'text-green-500 bg-green-50';
       case 'education': return 'text-purple-500 bg-purple-50';
-      case 'submission': return 'text-orange-500 bg-orange-50';
+      case 'nutrition': return 'text-amber-500 bg-amber-50';
       default: return 'text-slate-500 bg-slate-50';
     }
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-8">
       {/* Animated Welcome Banner */}
       <div className={`
         relative bg-gradient-to-r from-[#2E8B57] to-[#3CB371] rounded-2xl p-8 text-white overflow-hidden shadow-xl
         transition-all duration-500 transform hover:scale-[1.02] cursor-pointer
         ${showWelcome ? 'opacity-100' : 'opacity-90'}
       `}
-      onClick={() => setShowWelcome(!showWelcome)}
-      >
+      onClick={() => setShowWelcome(!showWelcome)}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -right-10 -top-10 w-40 h-40 bg-white rounded-full animate-pulse" />
           <div className="absolute -right-20 -bottom-20 w-60 h-60 bg-white rounded-full animate-pulse delay-1000" />
@@ -705,11 +844,11 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
             </span>
           </div>
           <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
-            St. Gabriel Center 👋
+             Orphanage 👋
           </h2>
           <p className="text-white/90 leading-relaxed max-w-2xl text-lg">
-            You're making a difference in the lives of 128 children. Track your impact, 
-            manage submissions, and monitor interventions all in one place.
+            You're caring for 42 beautiful children today. Track their health, education, 
+            and daily needs all in one place.
           </p>
         </div>
       </div>
@@ -764,10 +903,10 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
             <div className="p-6 border-b border-slate-200 flex justify-between items-center">
               <h3 className="text-lg font-bold flex items-center gap-2">
                 <WarningIcon className="text-amber-500" />
-                Action Required
+                Care Tasks
               </h3>
               <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold uppercase animate-pulse">
-                3 Needs Correction
+                3 Need Attention
               </span>
             </div>
             <div className="divide-y divide-slate-200">
@@ -779,7 +918,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
           {/* Activity Timeline */}
           <section className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
-            <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
+            <h3 className="text-lg font-bold mb-6">Recent Activities</h3>
             <div className="space-y-6">
               {activities.map((activity, index) => (
                 <div key={activity.id} className="flex gap-4 group">
@@ -819,7 +958,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
           {/* Chart Section */}
           <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
             <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-              <h3 className="text-lg font-bold">Support Impact Tracking</h3>
+              <h3 className="text-lg font-bold">Children Growth Trend</h3>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
@@ -850,11 +989,11 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
             <div className="mt-6 flex flex-wrap gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-[#2E8B57]"></span>
-                <span className="text-slate-500">Nutritional Support</span>
+                <span className="text-slate-500">Total Children</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-[#2E8B57]/30"></span>
-                <span className="text-slate-500">Health Interventions</span>
+                <span className="text-slate-500">Target Capacity</span>
               </div>
             </div>
           </section>
@@ -884,7 +1023,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
 
           {/* Recent Submissions */}
           <section className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500">
-            <h3 className="text-lg font-bold mb-4">Recent Submissions</h3>
+            <h3 className="text-lg font-bold mb-4">Recent Activities</h3>
             <div className="space-y-4">
               {recentSubmissions.map(submission => (
                 <RecentSubmission key={submission.id} submission={submission} />
@@ -896,11 +1035,11 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
                        hover:bg-[#2E8B57]/5 rounded-lg transition-all 
                        hover:scale-105 active:scale-95"
             >
-              View All Submissions
+              View All Records
             </button>
           </section>
 
-          {/* Institution Info Card */}
+          {/* Orphanage Info Card */}
           <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-2xl
                             hover:scale-[1.02] transition-all duration-500">
             <div className="flex items-center gap-3 mb-3">
@@ -908,16 +1047,17 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
                 <HistoryIcon className="text-[#2E8B57]" />
               </div>
               <div>
-                <p className="text-sm font-bold">Member Since</p>
+                <p className="text-sm font-bold">Established</p>
                 <p className="text-[10px] text-white/60 uppercase tracking-widest">
-                  January 2023
+                  January 2010
                 </p>
               </div>
             </div>
             
             <p className="text-xs text-white/80 leading-relaxed">
-              Your institution has been actively participating in the program for over 1 year.
-              Total children supported: <span className="text-[#2E8B57] font-bold">128</span>
+              Providing loving care for over 13 years. 
+              Currently <span className="text-[#2E8B57] font-bold">42 children</span> with 
+              <span className="text-[#2E8B57] font-bold"> 12 caregivers</span>.
             </p>
           </section>
         </div>
@@ -926,36 +1066,35 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
   );
 };
 
-// ============== Main InstitutionDashboard Component ==============
+// ============== Main OrphanageDashboard Component ==============
 
-const InstitutionDashboard: React.FC = () => {
+const OrphanageDashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [activePage, setActivePage] = useState('dashboard');
   const [showNotifications, setShowNotifications] = useState(false);
 
-  // Notifications data
   const notifications: Notification[] = [
     {
       id: 1,
-      title: 'New Submission',
-      message: 'A new child profile has been submitted for review.',
+      title: 'New Child Admission',
+      message: 'A new child has been admitted to Sunshine Room.',
       time: '5 minutes ago',
       read: false,
       type: 'info'
     },
     {
       id: 2,
-      title: 'Approval Required',
-      message: 'Medical intervention report needs your approval.',
+      title: 'Medical Checkup Due',
+      message: '3 children need their monthly health checkup.',
       time: '1 hour ago',
       read: false,
       type: 'warning'
     },
     {
       id: 3,
-      title: 'Update Successful',
-      message: 'Child profile has been successfully updated.',
+      title: 'School Reports Ready',
+      message: 'Monthly school progress reports are ready.',
       time: '3 hours ago',
       read: true,
       type: 'success'
@@ -963,10 +1102,10 @@ const InstitutionDashboard: React.FC = () => {
   ];
 
   const user: User = {
-    name: 'Abeba Tesfaye',
-    email: 'abeba.tesfaye@stgabriel.org',
-    role: 'Institution Admin',
-    avatar: 'https://i.pravatar.cc/150?img=7'
+    name: 'Sister Martha',
+    email: 'martha@hopeorphanage.org',
+    role: 'Director',
+    avatar: 'https://i.pravatar.cc/150?img=8'
   };
 
   const handleLogout = () => {
@@ -985,7 +1124,6 @@ const InstitutionDashboard: React.FC = () => {
     setActivePage(page);
   };
 
-  // Render the appropriate page based on activePage
   const renderPage = () => {
     switch(activePage) {
       case 'dashboard':
@@ -994,29 +1132,22 @@ const InstitutionDashboard: React.FC = () => {
         return <ChildSubmissions onNavigate={handleNavigate} />;
       case 'submissions':
         return <SubmissionStatusPage onNavigate={handleNavigate} />;
-      case 'InterventionLogs':
+      case 'intervention':
         return <InterventionLogs onNavigate={handleNavigate} />;
-         
-     
       case 'children':
-        return (
-          <div className="p-8 text-center text-slate-500">
-            <h2 className="text-2xl font-bold">Children List Page</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
+        return <ChildrenList />;
       case 'profile':
         return (
           <div className="p-8 text-center text-slate-500">
-            <h2 className="text-2xl font-bold">Profile Page</h2>
-            <p>Coming soon...</p>
+            <h2 className="text-2xl font-bold">My Profile</h2>
+            <p className="mt-2">Coming soon...</p>
           </div>
         );
       case 'settings':
         return (
           <div className="p-8 text-center text-slate-500">
-            <h2 className="text-2xl font-bold">Settings Page</h2>
-            <p>Coming soon...</p>
+            <h2 className="text-2xl font-bold">Settings</h2>
+            <p className="mt-2">Coming soon...</p>
           </div>
         );
       default:
@@ -1036,11 +1167,9 @@ const InstitutionDashboard: React.FC = () => {
       />
 
       <main className="flex-1 overflow-y-auto bg-[#F8F9FA]">
-        {/* Modern Header with User Menu */}
         <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-xl border-b border-slate-200">
           <div className="flex items-center justify-between px-4 lg:px-8 h-20">
             <div className="flex items-center gap-4">
-              {/* Mobile Menu Button */}
               <button 
                 onClick={() => setMobileSidebarOpen(true)}
                 className="lg:hidden p-2 hover:bg-slate-100 rounded-xl transition-all
@@ -1049,28 +1178,24 @@ const InstitutionDashboard: React.FC = () => {
                 <MenuIcon />
               </button>
               
-              {/* Page Title */}
               <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E8B57] to-[#3CB371] 
                            bg-clip-text text-transparent animate-slideIn">
-                {activePage === 'dashboard' && 'Dashboard'}
+                {activePage === 'dashboard' && 'Orphanage Dashboard'}
                 {activePage === 'submit' && 'Submit Child Profile'}
                 {activePage === 'submissions' && 'Submission Status'}
-                {activePage === 'InterventionLogs' && 'Intervention Log'}
+                {activePage === 'intervention' && 'Intervention Log'}
                 {activePage === 'children' && 'Children List'}
                 {activePage === 'profile' && 'My Profile'}
                 {activePage === 'settings' && 'Settings'}
               </h1>
             </div>
             
-            {/* Right Side Icons */}
             <div className="flex items-center gap-4 lg:gap-6">
-              {/* Search */}
               <button className="hidden lg:block p-2 text-slate-500 hover:text-[#2E8B57] 
                                transition-all hover:scale-110 active:scale-95">
                 <SearchIcon />
               </button>
 
-              {/* Notifications */}
               <div className="relative">
                 <button 
                   onClick={() => setShowNotifications(!showNotifications)}
@@ -1091,7 +1216,6 @@ const InstitutionDashboard: React.FC = () => {
                 />
               </div>
               
-              {/* User Menu Dropdown */}
               <UserMenu 
                 user={user}
                 onLogout={handleLogout}
@@ -1102,13 +1226,11 @@ const InstitutionDashboard: React.FC = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <div className="animate-fadeIn">
           {renderPage()}
         </div>
       </main>
 
-      {/* Custom Animations */}
       <style>{`
         @keyframes slideIn {
           from {
@@ -1155,4 +1277,4 @@ const InstitutionDashboard: React.FC = () => {
   );
 };
 
-export default InstitutionDashboard;
+export default OrphanageDashboard;
