@@ -8,7 +8,19 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ roles }: ProtectedRouteProps) {
   const { user } = useAuth()
-  if (!user) return <Navigate to="/login" replace />
-  if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />
+
+  // Also check storage directly as a fallback for the brief moment after login
+  const hasToken = !!(localStorage.getItem('access_token') ?? sessionStorage.getItem('access_token'))
+  const storedUser = (() => {
+    try {
+      const s = localStorage.getItem('user') ?? sessionStorage.getItem('user')
+      return s ? JSON.parse(s) : null
+    } catch { return null }
+  })()
+
+  const effectiveUser = user ?? (hasToken ? storedUser : null)
+
+  if (!effectiveUser) return <Navigate to="/login" replace />
+  if (roles && !roles.includes(effectiveUser.role)) return <Navigate to="/dashboard" replace />
   return <Outlet />
 }

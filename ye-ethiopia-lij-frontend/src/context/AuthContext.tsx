@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 import { login as apiLogin } from '../api/auth'
 import type { User } from '../types'
 
@@ -15,34 +15,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
     try {
       const stored = localStorage.getItem('user') ?? sessionStorage.getItem('user')
-      return stored ? (JSON.parse(stored) as User) : null
+      if (!stored) return null
+      const accessToken = localStorage.getItem('access_token') ?? sessionStorage.getItem('access_token')
+      if (!accessToken) return null
+      return JSON.parse(stored) as User
     } catch {
       return null
     }
   })
   const [loading, setLoading] = useState(false)
 
-  // On mount: verify the stored token is still valid by checking it exists
-  // If tokens are missing but user object exists, clear everything
-  useEffect(() => {
-    const accessToken = localStorage.getItem('access_token') ?? sessionStorage.getItem('access_token')
-    const storedUser = localStorage.getItem('user') ?? sessionStorage.getItem('user')
-    if (storedUser && !accessToken) {
-      // User data exists but no token — stale state, clear it
-      localStorage.clear()
-      sessionStorage.clear()
-      setUser(null)
-    }
-  }, [])
-
   const login = async (email: string, password: string, remember = true): Promise<User> => {
     setLoading(true)
     try {
       const { data } = await apiLogin({ email, password })
       const storage = remember ? localStorage : sessionStorage
+      const other = remember ? sessionStorage : localStorage
+      // Save to chosen storage first, then clear the other
       storage.setItem('access_token', data.access)
       storage.setItem('refresh_token', data.refresh)
       storage.setItem('user', JSON.stringify(data.user))
+      other.clear()
       setUser(data.user)
       return data.user
     } finally {
@@ -54,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.clear()
     sessionStorage.clear()
     setUser(null)
+    window.location.href = '/login'
   }
 
   return (
@@ -63,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useAuth(): AuthContextValue {
+export const useAuth = () => {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx
